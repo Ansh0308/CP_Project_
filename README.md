@@ -11,8 +11,18 @@ Full architecture, diagrams, terminology, and roadmap are documented in [`docs/`
 
 ## Project Status
 
-**Current phase: Phase 1 — Project & Git repository setup.**
-No Airflow, CI, or deployment logic exists yet. See [`docs/roadmap/phase-roadmap.md`](docs/roadmap/phase-roadmap.md) for the full plan.
+**Current phase: Phase 2 — Local Apache Airflow environment (Docker Compose).**
+A local Airflow 2.x instance (webserver + scheduler + PostgreSQL) runs via `docker-compose.yml`. No CI or deployment logic exists yet. See [`docs/roadmap/phase-roadmap.md`](docs/roadmap/phase-roadmap.md) for the full plan.
+
+## Running Locally
+
+```bash
+cp .env.example .env
+docker compose up airflow-init
+docker compose up -d airflow-webserver airflow-scheduler
+```
+
+Then open http://localhost:8081 (login: `admin` / `admin`).
 
 ## Repository Structure
 
@@ -38,6 +48,6 @@ airflow-cicd/
 - Once CI passes (from Phase 4 onward) and a PR is approved, it is merged into `main`.
 - A merge to `main` will eventually (from Phase 6 onward) trigger automatic deployment to staging.
 
-## Setup
+## Prerequisites
 
-Not applicable yet — no Airflow environment exists at this phase. See `docs/roadmap/phase-roadmap.md` for what's coming next.
+- Docker Desktop (with WSL2 backend on Windows)

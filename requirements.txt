@@ -1,0 +1,3 @@
+# Phase 1: no dependencies yet — no Airflow, tests, or tooling code exists in
+# this repo yet. This file will be populated starting Phase 2/3
+# (apache-airflow, pytest) as soon as there is actual code that needs them.

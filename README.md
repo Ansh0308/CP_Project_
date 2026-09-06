@@ -11,8 +11,8 @@ Full architecture, diagrams, terminology, and roadmap are documented in [`docs/`
 
 ## Project Status
 
-**Current phase: Phase 2 — Local Apache Airflow environment (Docker Compose).**
-A local Airflow 2.x instance (webserver + scheduler + PostgreSQL) runs via `docker-compose.yml`. No CI or deployment logic exists yet. See [`docs/roadmap/phase-roadmap.md`](docs/roadmap/phase-roadmap.md) for the full plan.
+**Current phase: Phase 3 — Sample Airflow DAGs.**
+A local Airflow 2.x instance (webserver + scheduler + PostgreSQL) runs via `docker-compose.yml`, with a realistic 5-task business DAG (`sales_data_pipeline`) demonstrating dependencies, operators, retries, tags, scheduling, and a controlled failure scenario. No CI or deployment logic exists yet. See [`docs/roadmap/phase-roadmap.md`](docs/roadmap/phase-roadmap.md) for the full plan.
 
 ## Running Locally
 

@@ -11,8 +11,8 @@ Full architecture, diagrams, terminology, and roadmap are documented in [`docs/`
 
 ## Project Status
 
-**Current phase: Phase 3 — Sample Airflow DAGs.**
-A local Airflow 2.x instance (webserver + scheduler + PostgreSQL) runs via `docker-compose.yml`, with a realistic 5-task business DAG (`sales_data_pipeline`) demonstrating dependencies, operators, retries, tags, scheduling, and a controlled failure scenario. No CI or deployment logic exists yet. See [`docs/roadmap/phase-roadmap.md`](docs/roadmap/phase-roadmap.md) for the full plan.
+**Current phase: Phase 4 — Separate staging and production Airflow environments.**
+Three independent Docker Compose Airflow stacks now exist: dev (`docker-compose.yml`, port 8081), staging (`staging/docker-compose.yml`, port 8082), and production (`production/docker-compose.yml`, port 8083) — each with its own metadata database, credentials, and DAG folder. No automated deployment or CI/CD exists yet. See [`docs/roadmap/phase-roadmap.md`](docs/roadmap/phase-roadmap.md) for the full plan.
 
 ## Running Locally
 
@@ -23,6 +23,28 @@ docker compose up -d airflow-webserver airflow-scheduler
 ```
 
 Then open http://localhost:8081 (login: `admin` / `admin`).
+
+### Staging
+
+```bash
+cd staging
+docker compose up airflow-init
+docker compose up -d airflow-webserver airflow-scheduler
+```
+
+Open http://localhost:8082 (login: `staging_admin` / `staging_admin`).
+
+### Production
+
+```bash
+cd production
+docker compose up airflow-init
+docker compose up -d airflow-webserver airflow-scheduler
+```
+
+Open http://localhost:8083 (login: `prod_admin` / `prod_admin`).
+
+> Note: running all three environments at once may exceed available memory on lower-spec machines (see [docs/phase-4-staging-production/06-troubleshooting-log.md](docs/phase-4-staging-production/06-troubleshooting-log.md)). Run at most two at a time if you hit issues.
 
 ## Repository Structure
 

@@ -70,7 +70,9 @@ def process_data(**context):
 def store_result(**context):
     """Simulate persisting the final result (e.g. to a database or file)."""
     totals = context["ti"].xcom_pull(key="totals", task_ids="process_data")
+    grand_total = sum(totals.values())
     print(f"Storing final sales totals: {totals}")
+    print(f"Grand total across all products: {grand_total}")
 
 
 with DAG(

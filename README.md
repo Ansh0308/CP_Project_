@@ -11,8 +11,8 @@ Full architecture, diagrams, terminology, and roadmap are documented in [`docs/`
 
 ## Project Status
 
-**Current phase: Phase 4 — Separate staging and production Airflow environments.**
-Three independent Docker Compose Airflow stacks now exist: dev (`docker-compose.yml`, port 8081), staging (`staging/docker-compose.yml`, port 8082), and production (`production/docker-compose.yml`, port 8083) — each with its own metadata database, credentials, and DAG folder. No automated deployment or CI/CD exists yet. See [`docs/roadmap/phase-roadmap.md`](docs/roadmap/phase-roadmap.md) for the full plan.
+**Current phase: Phase 5 — Git development workflow.**
+The repository is now hosted on GitHub at [Ansh0308/CP_Project_](https://github.com/Ansh0308/CP_Project_), with a `main` branch protection rule (PR required, status checks required) and an open Pull Request (#1) demonstrating the feature-branch → commit → push → PR workflow. No CI or automated deployment exists yet. See [`docs/roadmap/phase-roadmap.md`](docs/roadmap/phase-roadmap.md) for the full plan.
 
 ## Running Locally
 

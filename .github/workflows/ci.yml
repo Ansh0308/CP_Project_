@@ -60,3 +60,17 @@ jobs:
           AIRFLOW__CORE__DAGS_FOLDER: ${{ github.workspace }}/dags
         run: |
           python scripts/ci/lint_dags.py
+
+      # --- Validation layer 4: unit tests (pytest) ---
+      # Tests DAG structure (task count, IDs, dependency graph, no
+      # cycles, no orphans, retries, required config) and individual
+      # task-callable logic in isolation, with Airflow's XCom/database
+      # mocked - see tests/. Distinct from layers 1-3, which only prove
+      # a DAG file is well-formed, not that its logic is correct.
+      - name: "Layer 4: Unit tests (pytest)"
+        env:
+          AIRFLOW_HOME: ${{ github.workspace }}/.airflow_ci
+          AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+          AIRFLOW__CORE__DAGS_FOLDER: ${{ github.workspace }}/dags
+        run: |
+          pytest tests/ -v

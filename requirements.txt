@@ -2,3 +2,8 @@
 # Airflow scheduler does (see docs/phase-6-ci-validation). Pinned to match
 # the apache/airflow:2.9.3 image used by every Docker Compose environment.
 apache-airflow==2.9.3
+
+# Phase 7: unit testing framework for tests/
+# Pinned to the version in Airflow's own constraints file for 2.9.3 to
+# avoid a dependency conflict during `pip install --constraint ...`.
+pytest==7.4.4

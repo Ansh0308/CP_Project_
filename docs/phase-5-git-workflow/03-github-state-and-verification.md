@@ -24,12 +24,22 @@ Configured at `https://github.com/Ansh0308/CP_Project_/settings/branches`:
 
 Confirmed via the Branches settings page: "main — Currently applies to 1 branch."
 
-## Important Real Finding: Owner Bypass on Personal Repositories
+## Correction (made during Phase 6): the Real Cause Was a UI Bug, Not Owner Bypass
 
-We deliberately tested whether the rule actually blocks a direct push to `main`, including as the repository owner, by:
-1. Checking out `main` locally, committing a trivial test line directly (no PR), and pushing — **this succeeded**, even with "Require a pull request before merging" enabled.
-2. Editing the rule to also enable "Do not allow bypassing the above settings" and repeating the test — **it still succeeded**.
+We originally tested whether the rule blocks a direct push to `main`, including as the repository owner, by pushing test commits directly. Both attempts **succeeded**, and at the time we concluded this was GitHub allowing repository owners to bypass classic branch protection on personal repositories.
 
-Both test commits were cleanly reverted with forward `git revert` commits (not force-push/history rewrite) immediately after, so `main`'s content is unaffected; the attempts remain visible in history as an honest record.
+**That conclusion was wrong**, and the real cause was found and fixed during Phase 6. GitHub's classic branch-protection edit page has a rendering bug (observed directly, reproduced twice): the "Require a pull request before merging" and "Require status checks to pass before merging" master checkboxes can render and report as checked via the page's own visible state and even via a plain DOM query as `checked: true` shortly after being toggled — but after a full page reload, a JavaScript check of `document.querySelector('input[name="has_required_reviews"]').checked` showed the *true, persisted* value was actually `false`. In other words: our Phase 5 setup never actually saved as enabled in the first place — the pushes succeeded because the rule genuinely did not require a PR yet, not because the owner bypassed a working rule.
 
-**Conclusion:** on a personal (non-organization) GitHub repository, the repository **owner** account retains the ability to push directly to a "protected" branch regardless of classic branch-protection settings — there is no lower permission role to demote the owner to. This is a platform limitation, not a misconfiguration on our part; the settings themselves were confirmed correctly saved. In a real team setting (organization-owned repo, or the developer pushing is *not* the owner/an admin), the exact same rule would correctly block the push and force a Pull Request. This is documented here rather than hidden, because it's a genuinely useful, non-obvious thing to know about how GitHub's protection model works.
+**How this was found and fixed (Phase 6):** while adding "Validate DAGs" as a required status check, repeated UI attempts to select it from the search dropdown appeared to work visually but did not persist. Querying the actual checkbox DOM state after a fresh reload revealed both master toggles were `false`. Toggling them again (verified with `.checked === true` immediately, *and* re-verified as still `true` after a full page reload) and then successfully adding "Validate DAGs" as a required check and saving fixed it for real.
+
+**Proof it now works — even for the owner:**
+```
+$ git push origin main
+remote: error: GH006: Protected branch update failed for refs/heads/main.
+remote: - Changes must be made through a pull request.
+remote: - Required status check "Validate DAGs" is expected.
+error: failed to push some refs to 'https://github.com/Ansh0308/CP_Project_.git'
+```
+This is the real, correct behavior: a direct push to `main` — including by the repository owner — is now genuinely rejected, both for missing a PR and for missing the required "Validate DAGs" check.
+
+**Lesson:** when a GitHub settings page's own UI state seems to update after an action, that is not proof the change was persisted server-side. The only reliable verification is a fresh page reload followed by re-reading the actual state (or, as here, testing the real-world behavior the setting is supposed to control).

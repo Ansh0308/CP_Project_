@@ -4,7 +4,7 @@
 2. What is the practical difference between `git push` and `git push -u` (`--set-upstream`)?
 3. What does a Pull Request actually change about how code reaches `main`, technically speaking (i.e. what does GitHub enforce that plain `git merge` locally would not)?
 4. Why did enabling "Require status checks to pass before merging" with zero checks actually selected still matter for this phase?
-5. What did our experiment reveal about branch protection and repository ownership on GitHub, and why does that gap not matter in a real company/organization setting?
+5. What did our experiment initially seem to reveal about branch protection and repository ownership, what was the actual root cause discovered in Phase 6, and why is "the UI shows it as checked" not sufficient proof a setting was saved?
 6. Why was `git revert` used to undo the accidental direct-push test commits instead of `git reset --hard` + force-push?
 7. What is the difference between "Require a pull request before merging" and "Require status checks to pass before merging" — what does each independently prevent?
 8. If a second developer wanted to contribute to this project, what is the exact sequence of Git/GitHub actions they would need to take, from cloning the repo to having their change appear in `main`?

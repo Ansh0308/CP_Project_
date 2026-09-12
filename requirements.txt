@@ -1,3 +1,4 @@
-# Phase 1: no dependencies yet — no Airflow, tests, or tooling code exists in
-# this repo yet. This file will be populated starting Phase 2/3
-# (apache-airflow, pytest) as soon as there is actual code that needs them.
+# Phase 6: needed so CI can actually import our DAGs the same way the real
+# Airflow scheduler does (see docs/phase-6-ci-validation). Pinned to match
+# the apache/airflow:2.9.3 image used by every Docker Compose environment.
+apache-airflow==2.9.3

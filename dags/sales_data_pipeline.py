@@ -92,4 +92,4 @@ with DAG(
     t4_process = PythonOperator(task_id="process_data", python_callable=process_data)
     t5_store = PythonOperator(task_id="store_result", python_callable=store_result)
 
-    t1_fetch >> t2_clean >> t3_validate >> t4_process >> t5_store
+    t1_fetch >> t2_clean >> t4_process >> t3_validate >> t5_store

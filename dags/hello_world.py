@@ -9,7 +9,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id="HelloWorldV2",
+    dag_id="hello_world",
     description="Phase 2 sanity-check DAG: proves Airflow can parse and schedule DAGs",
     default_args=default_args,
     start_date=datetime(2026, 1, 1),

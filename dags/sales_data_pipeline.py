@@ -89,7 +89,6 @@ with DAG(
     t1_fetch = PythonOperator(task_id="fetch_data", python_callable=fetch_data)
     t2_clean = PythonOperator(task_id="clean_data", python_callable=clean_data)
     t3_validate = PythonOperator(task_id="validate_data", python_callable=validate_data)
-    t4_process = PythonOperator(task_id="process_data", python_callable=process_data)
     t5_store = PythonOperator(task_id="store_result", python_callable=store_result)
 
-    t1_fetch >> t2_clean >> t4_process >> t3_validate >> t5_store
+    t1_fetch >> t2_clean >> t3_validate >> t5_store

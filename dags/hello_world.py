@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
-from airflow.operators.nonexistent_module import FakeOperator
 
 default_args = {
     "retries": 1,
@@ -10,7 +9,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id="hello_world",
+    dag_id="HelloWorldV2",
     description="Phase 2 sanity-check DAG: proves Airflow can parse and schedule DAGs",
     default_args=default_args,
     start_date=datetime(2026, 1, 1),

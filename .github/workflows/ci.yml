@@ -1,0 +1,62 @@
+name: CI - Airflow DAG Validation
+
+# Run on every Pull Request targeting main (catch problems before merge)
+# and on every push to main (guard against anything that slips through,
+# e.g. a merge performed by an admin bypassing the PR requirement).
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate-dags:
+    name: Validate DAGs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          pip install --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.9.3/constraints-3.12.txt" \
+            -r requirements.txt
+
+      # --- Validation layer 1: Python syntax validation ---
+      # Fastest, cheapest check. Catches typos/syntax errors without
+      # needing Airflow installed at all - fails in seconds, not minutes.
+      - name: "Layer 1: Python syntax validation"
+        run: |
+          python -m py_compile dags/*.py
+
+      # --- Validation layer 2: Airflow DAG import validation ---
+      # Loads every DAG file the same way the real Airflow scheduler does
+      # (via DagBag), catching bad imports, missing operators, or DAG
+      # construction errors that syntax checking alone cannot see.
+      - name: "Layer 2: Airflow DAG import validation"
+        env:
+          AIRFLOW_HOME: ${{ github.workspace }}/.airflow_ci
+          AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+          AIRFLOW__CORE__DAGS_FOLDER: ${{ github.workspace }}/dags
+        run: |
+          airflow db migrate
+          python scripts/ci/check_dag_imports.py
+
+      # --- Validation layer 3: custom project DAG lint rules ---
+      # Project-specific rules beyond what Airflow itself enforces:
+      # naming convention, mandatory tags, required retries, required
+      # SLA for business-critical DAGs. See docs/phase-6-ci-validation.
+      - name: "Layer 3: Custom DAG lint rules"
+        env:
+          AIRFLOW_HOME: ${{ github.workspace }}/.airflow_ci
+          AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+          AIRFLOW__CORE__DAGS_FOLDER: ${{ github.workspace }}/dags
+        run: |
+          python scripts/ci/lint_dags.py

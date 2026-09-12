@@ -20,4 +20,4 @@ with DAG(
     say_hello = BashOperator(
         task_id="say_hello",
         bash_command="echo 'Hello from Airflow running in Docker Compose'",
-    )
+

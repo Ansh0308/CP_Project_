@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
+from airflow.operators.nonexistent_module import FakeOperator
 
 default_args = {
     "retries": 1,
@@ -20,4 +21,4 @@ with DAG(
     say_hello = BashOperator(
         task_id="say_hello",
         bash_command="echo 'Hello from Airflow running in Docker Compose'",
-
+    )

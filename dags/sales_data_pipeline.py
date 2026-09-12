@@ -21,6 +21,8 @@ default_args = {
     "owner": "airflow",
     "retries": 2,
     "retry_delay": timedelta(seconds=30),
+    # Required by project rule: any DAG tagged "business-pipeline" must
+    # declare an SLA (see docs/phase-6-ci-validation/03-lint-rules.md).
     "sla": timedelta(hours=1),
 }
 
@@ -80,7 +82,7 @@ with DAG(
     default_args=default_args,
     start_date=datetime(2026, 1, 1),
     schedule="@daily",
-    catchup=True,
+    catchup=False,
     tags=["phase-3", "business-pipeline", "sales"],
 ) as dag:
 
